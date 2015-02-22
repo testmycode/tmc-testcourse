@@ -2,7 +2,7 @@
 #include <math.h>
 #include "source.h"
 
-void three_lines(void)
+int my_sum_function(int a, int b)
 {
-    printf("January\nFebruary\nMarch\n");
+  return a + b;
 }

@@ -1,1 +1,1 @@
-void three_lines(void);
+int my_sum_function(int a, int b);

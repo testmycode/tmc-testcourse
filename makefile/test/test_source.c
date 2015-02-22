@@ -8,20 +8,9 @@
 #include "../src/source.h"
 
 
-START_TEST(test_three_lines)
+START_TEST(test_sum)
 {
-    freopen("mockoutput", "w", stdout);
-    three_lines();
-    fclose(stdout);
-    FILE *fp = fopen("mockoutput", "r");
-    char str [100] = { 0 };
-    fread(str, 99, 1, fp);
-    char infostr[100] = "";
-    char *rightstr = "January\nFebruary\nMarch\n";
-    int ret = 1 //compare(str, rightstr, infostr);
-    fail_unless(!ret, "[Task 1.1] Your output:\n%s\nReference output:\n%s\nReason: %s\n",
-            str, rightstr, infostr);
-    fclose(fp);
+    fail_unless(my_sum_function(1, 2) == 3, "My own sum function should sum 1 and 2 resulting in 3");
 }
 END_TEST
 
@@ -29,6 +18,6 @@ int main(int argc, const char *argv[])
 {
     srand((unsigned)time(NULL));
 	Suite *s = suite_create("Test-demo");
-	tmc_register_test(s, test_three_lines, "1");
+	tmc_register_test(s, test_sum, "1");
 	return tmc_run_tests(argc, argv, s);
 }
