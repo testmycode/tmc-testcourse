@@ -1,5 +1,5 @@
 no-tests:
   exercise_name: NoTests
-  - points:
+  points:
     - no-tests
     - troll
