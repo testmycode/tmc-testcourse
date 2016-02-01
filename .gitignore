@@ -2,3 +2,4 @@
 target
 /invalid/most_errors/nbproject/private/
 __pycache__
+.tmc_test_results.json
