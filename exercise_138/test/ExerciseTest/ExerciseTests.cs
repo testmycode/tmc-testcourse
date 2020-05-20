@@ -3,50 +3,62 @@ using System.IO;
 using Xunit;
 using Exercise;
 using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ExerciseTest
 {
-    public class Tests /*: IDisposable*/
+    public class Tests
     {
-        string target = "../../../";
-        string current = Directory.GetCurrentDirectory();
+        private Type ProgramType = typeof(Program);
+        private MethodInfo MainMethod;
+        private MethodBody MainMethodBody;
 
-        /*
-        public Tests() {
-            Directory.SetCurrentDirectory(target);
-        }
-
-        public void Dispose()
+        public Tests()
         {
-            Directory.SetCurrentDirectory(current);
+            this.MainMethod = this.ProgramType.GetMethod("Main", new[] { typeof(string[]) });
+            this.MainMethodBody = this.MainMethod.GetMethodBody();
         }
-        */
 
         [Fact]
         public void TestMainExists()
         {
-            string code = File.ReadAllText("../../src/Exercise/Program.cs");
-            int count = Regex.Matches(code, @"public static void Main\(string\[\] args\)").Count;
-
-            Assert.Equal(1, count/*, "Do not destroy the Main class from Program.cs!"*/);
+            Assert.NotNull(this.MainMethodBody/*, "Do not destroy the Main class from Program.cs!"*/);
         }
 
         [Fact]
         public void TestDictionaryIsUsed()
         {
-            string code = File.ReadAllText("../../src/Exercise/Program.cs");
-            int count = Regex.Matches(code, @"Dictionary").Count;
+            IList<LocalVariableInfo> locals = this.MainMethodBody.LocalVariables;
 
-            Assert.True(count > 0/*, "Use a Dictionary in your code!"*/);
+            //This could be made more strict by requiring them to use speicified key and value types
+            Assert.True(locals.Any(local =>
+                local.LocalType.IsGenericType &&
+                local.LocalType.GetGenericTypeDefinition() == typeof(Dictionary<,>)), "Use a Dictionary in your code!");
         }
 
         [Fact]
         public void TestForeachIsUsed()
         {
-            string code = File.ReadAllText("../../src/Exercise/Program.cs");
-            int count = Regex.Matches(code, @"foreach").Count;
+            IList<ExceptionHandlingClause> exceptionHandlers = this.MainMethodBody.ExceptionHandlingClauses;
 
-            Assert.True(count > 0/*, "Use a foreach in your code!"*/);
+            //Foreach generates hidden finally block
+            bool hasFinally = exceptionHandlers.Any(handler =>
+                handler.Flags == ExceptionHandlingClauseOptions.Finally);
+
+            IList<LocalVariableInfo> locals = this.MainMethodBody.LocalVariables;
+
+            //Foreach uses GetEnumerator() internally
+            bool hasEnumerator = locals.Any(local => 
+                local.LocalType.IsGenericType &&
+                local.LocalType.GetGenericTypeDefinition() == typeof(Dictionary<,>.Enumerator));
+
+            bool hasKeyValuePair = locals.Any(local => 
+                local.LocalType.IsGenericType &&
+                local.LocalType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>));
+
+            Assert.True(hasFinally && hasEnumerator && hasKeyValuePair, "Use a foreach in your code!");
         }
 
         [Fact]
@@ -54,6 +66,8 @@ namespace ExerciseTest
         {
             using (StringWriter sw = new StringWriter())
             {
+                sw.NewLine = "\r\n";
+
                 // Save a reference to the standard output.
                 TextWriter stdout = Console.Out;
 
@@ -67,8 +81,10 @@ namespace ExerciseTest
                 Console.SetOut(stdout);
 
                 // Assert
-                Assert.Equal("matthew's nickname is matt\nmichael's nickname is mix\narthur's nickname is artie\n", 
-                            sw.ToString().Replace("\r\n", "\n")/*, "Check your code!\nYou should print out exactly as the example says!"*/);
+                Assert.StartsWith(
+@"matthew's nickname is matt
+michael's nickname is mix
+arthur's nickname is artie", sw.ToString());
             }
         }
     }
