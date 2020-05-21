@@ -3,49 +3,46 @@ using System.IO;
 using Xunit;
 using Exercise;
 using System.Text.RegularExpressions;
+using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExerciseTest
 {
-    public class Tests : IDisposable
+    public class Tests
     {
-        string target = "../../../";
-        string current = Directory.GetCurrentDirectory();
+        private Type ProgramType = typeof(Program);
+        private MethodInfo MainMethod;
+        private MethodBody MainMethodBody;
 
-        public Tests() {
-            Directory.SetCurrentDirectory(target);
-        }
-
-        public void Dispose()
+        public Tests()
         {
-            Directory.SetCurrentDirectory(current);
+            this.MainMethod = this.ProgramType.GetMethod("Main", new[] { typeof(string[]) });
+            this.MainMethodBody = this.MainMethod.GetMethodBody();
         }
 
         [Fact]
         public void TestMainExists()
         {
-            string code = File.ReadAllText("../../src/Exercise/Program.cs");
-            int count = Regex.Matches(code, @"public static void Main\(string\[\] args\)").Count;
-
-            Assert.Equal(1, count/*, "Do not destroy the Main class from Program.cs!"*/);
+            Assert.NotNull(this.MainMethodBody/*, "Do not destroy the Main class from Program.cs!"*/);
         }
 
         [Fact]
         public void TestAbbreviationsIsCreated()
-        {
-            string code = File.ReadAllText("../../src/Exercise/Abbreviations.cs");
-            int count = Regex.Matches(code, @"public class Abbreviations").Count;
-
-            Assert.True(count > 0/*, "Create the Abbreviations.cs file!"*/);
+        {   
+            Type AbbreviationsType = typeof(Abbreviations);
+            Assert.NotNull(AbbreviationsType/*, "Create the Abbreviations class!"*/);
         }
 
         [Fact]
-        public void TestDictionaryIsUsedInClass()
+        public void TestDictionaryIsUsed()
         {
-            string code = File.ReadAllText("../../src/Exercise/Abbreviations.cs");
-            int count = Regex.Matches(code, @"Dictionary").Count;
+            IList<LocalVariableInfo> locals = this.MainMethodBody.LocalVariables;
 
-            Assert.True(count > 0/*, "Use Dictionary in your Class!"*/);
+            //This could be made more strict by requiring specific key and value types
+            Assert.True(locals.Any(local =>
+                local.LocalType.IsGenericType &&
+                local.LocalType.GetGenericTypeDefinition() == typeof(Dictionary<,>)), "Use a Dictionary in your code!");
         }
 
         [Fact]

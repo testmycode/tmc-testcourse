@@ -3,22 +3,22 @@ using System.IO;
 using Xunit;
 using Exercise;
 using System.Text.RegularExpressions;
+using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExerciseTest
 {
-    public class Tests : IDisposable
+    public class Tests
     {
-        string target = "../../../";
-        string current = Directory.GetCurrentDirectory();
+        private Type ProgramType = typeof(Program);
+        private MethodInfo MainMethod;
+        private MethodBody MainMethodBody;
 
-        public Tests() {
-            Directory.SetCurrentDirectory(target);
-        }
-
-        public void Dispose()
+        public Tests()
         {
-            Directory.SetCurrentDirectory(current);
+            this.MainMethod = this.ProgramType.GetMethod("Main", new[] { typeof(string[]) });
+            this.MainMethodBody = this.MainMethod.GetMethodBody();
         }
 
         [Fact]

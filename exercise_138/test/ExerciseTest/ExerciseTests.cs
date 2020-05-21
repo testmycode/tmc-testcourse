@@ -32,7 +32,7 @@ namespace ExerciseTest
         {
             IList<LocalVariableInfo> locals = this.MainMethodBody.LocalVariables;
 
-            //This could be made more strict by requiring them to use speicified key and value types
+            //This could be made more strict by requiring specific key and value types
             Assert.True(locals.Any(local =>
                 local.LocalType.IsGenericType &&
                 local.LocalType.GetGenericTypeDefinition() == typeof(Dictionary<,>)), "Use a Dictionary in your code!");
@@ -82,9 +82,9 @@ namespace ExerciseTest
 
                 // Assert
                 Assert.StartsWith(
-@"matthew's nickname is matt
-michael's nickname is mix
-arthur's nickname is artie", sw.ToString());
+                    @"matthew's nickname is matt
+                    michael's nickname is mix
+                    arthur's nickname is artie", sw.ToString());
             }
         }
     }
