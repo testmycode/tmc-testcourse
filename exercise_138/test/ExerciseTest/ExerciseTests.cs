@@ -66,7 +66,8 @@ namespace ExerciseTest
         {
             using (StringWriter sw = new StringWriter())
             {
-                sw.NewLine = "\r\n";
+                //sw.NewLine = "\r\n";
+                sw.NewLine = "\n";
 
                 // Save a reference to the standard output.
                 TextWriter stdout = Console.Out;
@@ -81,10 +82,7 @@ namespace ExerciseTest
                 Console.SetOut(stdout);
 
                 // Assert
-                Assert.StartsWith(
-                    @"matthew's nickname is matt
-                    michael's nickname is mix
-                    arthur's nickname is artie", sw.ToString());
+                Assert.StartsWith("matthew's nickname is matt\nmichael's nickname is mix\narthur's nickname is artie", sw.ToString());
             }
         }
     }

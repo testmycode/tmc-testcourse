@@ -7,8 +7,15 @@ namespace Exercise
     {
         public static void Main(string[] args)
         {
-            // Do something here
-            Console.WriteLine("asd");
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("matthew", "matt");
+            dict.Add("michael", "mix");
+            dict.Add("arthur", "artie");
+
+            foreach(KeyValuePair<string, string> entry in dict)
+            {
+                Console.WriteLine($"{entry.Key}'s nickname is {entry.Value}");
+            }
         }
     }
 }

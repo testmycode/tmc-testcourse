@@ -12,6 +12,7 @@ namespace ExerciseTest
     public class Tests
     {
         private Type ProgramType = typeof(Program);
+        private Type AbbreviationsType = typeof(Abbreviations);
         private MethodInfo MainMethod;
         private MethodBody MainMethodBody;
 
@@ -30,19 +31,25 @@ namespace ExerciseTest
         [Fact]
         public void TestAbbreviationsIsCreated()
         {   
-            Type AbbreviationsType = typeof(Abbreviations);
             Assert.NotNull(AbbreviationsType/*, "Create the Abbreviations class!"*/);
         }
 
         [Fact]
         public void TestDictionaryIsUsed()
         {
+            /*
             IList<LocalVariableInfo> locals = this.MainMethodBody.LocalVariables;
 
             //This could be made more strict by requiring specific key and value types
             Assert.True(locals.Any(local =>
                 local.LocalType.IsGenericType &&
-                local.LocalType.GetGenericTypeDefinition() == typeof(Dictionary<,>)), "Use a Dictionary in your code!");
+                local.LocalType.GetGenericTypeDefinition() == typeof(Dictionary<,>)), "Use a Dictionary in your abbreviations class!");
+            */
+
+            Type AbbreviationsType = typeof(Abbreviations);
+            FieldInfo[] fields = AbbreviationsType != null ? AbbreviationsType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance) : new FieldInfo[0];
+            bool hasDict = fields.Any(field => field.FieldType == typeof(Dictionary<string, string>));
+            Assert.True(hasDict, "Use a Dictionary<string, string> in your abbreviations class!");
         }
 
         [Fact]
@@ -51,7 +58,7 @@ namespace ExerciseTest
             Abbreviations abbs = new Abbreviations();
             abbs.AddAbbreviation("np", "no problem");
             // Assert
-            Assert.True(abbs.HasAbbreviation("np")/*, "HasAbbrebiation should find the added abbreviation!"*/);
+            Assert.True(abbs.HasAbbreviation("np")/*, "HasAbbreviation should find the added abbreviation!"*/);
         }
 
         [Fact]
