@@ -1,50 +1,54 @@
+// SOLUTION FILE
 using System;
 
 namespace Exercise
 {
     public class Card : IComparable<Card>, IEquatable<Card>
     {
-        public int value { get; }
-        public Suit suit { get; }
+        public int Value { get; }
+        public Suit Suit { get; }
 
         public Card(int value, Suit suit)
         {
-            this.value = value;
-            this.suit = suit;
+            this.Value = value;
+            this.Suit = suit;
         }
 
         public override string ToString()
         {
-            string valueString = value switch {
+            string valueString = Value switch
+            {
                 11 => "J",
                 12 => "Q",
                 13 => "K",
                 14 => "A",
-                _ => value.ToString()
+                _ => Value.ToString()
             };
 
-            return $"{suit} {valueString}";
+            return $"{Suit} {valueString}";
         }
 
         public int CompareTo(Card another)
         {
-            int valueDiff = this.value - another.value;
-
+            int valueDiff = Value.CompareTo(another.Value);
             if (valueDiff != 0)
             {
                 return valueDiff;
             }
             else
             {
-                return ((int) this.suit) - ((int) another.suit);
+                return Suit.CompareTo(another.Suit);
             }
         }
 
         public bool Equals(Card other)
         {
-            if (other is null) return false;
+            if (other is null)
+            {
+                return false;
+            }
 
-            return this.value == other.value && this.suit == other.suit;
+            return Value == other.Value && Suit == other.Suit;
         }
     }
 }

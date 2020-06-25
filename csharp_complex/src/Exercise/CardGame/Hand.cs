@@ -1,3 +1,4 @@
+// SOLUTION FILE
 using System;
 using System.Collections.Generic;
 
@@ -7,13 +8,17 @@ namespace Exercise
     {
         private List<Card> hand;
 
-        public Hand() {
+        public Hand()
+        {
             hand = new List<Card>();
         }
 
         public void Add(Card card)
         {
-            if (card is null || hand.Contains(card)) return;
+            if (card is null || hand.Contains(card))
+            {
+                return;
+            }
 
             hand.Add(card);
         }
@@ -38,15 +43,15 @@ namespace Exercise
 
             foreach (Card c in hand)
             {
-                selfValue += c.value;
+                selfValue += c.Value;
             }
 
             foreach (Card c in other.hand)
             {
-                otherValue += c.value;
+                otherValue += c.Value;
             }
 
-            return selfValue - otherValue;
+            return selfValue.CompareTo(otherValue);
         }
     }
 }

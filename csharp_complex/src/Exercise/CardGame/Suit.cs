@@ -1,3 +1,4 @@
+// SOLUTION FILE
 namespace Exercise
 {
     public enum Suit

@@ -3,174 +3,146 @@ using System.IO;
 using Xunit;
 using Exercise;
 using System.Collections.Generic;
-using System.Reflection;
 using TestMyCode.CSharp.API.Attributes;
 
 namespace ExerciseTest
 {
     public class Tests
     {
-        string @namespace = "Exercise";
-        string mainclass = "Program";
-        private Type MainClassType;
-        private MethodInfo MainMethod;
-
-        public Tests()
+        [Fact]
+        [Points("1.1")]
+        public void CardToString()
         {
-            MainClassType = Type.GetType($"{@namespace}.{mainclass},{@namespace}");
-            this.MainMethod = this.MainClassType.GetMethod("Main", new[] { typeof(string[]) });
+            Card first = new Card(2, Suit.Diamond);
+            Card second = new Card(14, Suit.Spade);
+            Card third = new Card(12, Suit.Heart);
+
+            Assert.Equal("Diamond 2", first.ToString());
+            Assert.Equal("Spade A", second.ToString());
+            Assert.Equal("Heart Q", third.ToString());
         }
 
         [Fact]
-        public void TestMainExists()
+        [Points("1.2")]
+        public void CardSort()
         {
-            MethodBody MainMethodBody = this.MainMethod.GetMethodBody();
-            Assert.NotNull(MainMethodBody);
-        }
-
-        [Fact]
-        [Points("1")]
-        public void ExampleShouldWork()
-        {
-            using (StringWriter sw = new StringWriter())
+            List<Card> original = new List<Card>
             {
-                // Save a reference to the standard output.
-                TextWriter stdout = Console.Out;
+                new Card(2, Suit.Club),
+                new Card(12, Suit.Diamond),
+                new Card(12, Suit.Heart),
+                new Card(14, Suit.Heart),
+                new Card(14, Suit.Spade)
+            };
 
-                // Redirect standard output to variable.
-                Console.SetOut(sw);
-                Card first = new Card(2, Suit.Diamond);
-                Card second = new Card(14, Suit.Spade);
-                Card third = new Card(12, Suit.Heart);
+            List<Card> copy = new List<Card>(original);
+            
+            original.Reverse();
+            original.Sort();
 
-                Console.WriteLine(first);
-                Console.WriteLine(second);
-                Console.WriteLine(third);
-                Console.SetOut(stdout);
-                string comparison = "Diamond 2\nSpade A\nHeart Q\n";
-                Assert.Equal(comparison, sw.ToString().Replace("\r\n", "\n"));
-            }
+            Assert.Equal(copy, original);
         }
 
         [Fact]
-        [Points("1")]
-        public void Example2ShouldWork()
+        [Points("1.3")]
+        public void HandPrint()
         {
-            using (StringWriter sw = new StringWriter())
+            using StringWriter sw = new StringWriter()
             {
-                // Save a reference to the standard output.
-                TextWriter stdout = Console.Out;
+                NewLine = "\r\n"
+            };
 
-                // Redirect standard output to variable.
-                Console.SetOut(sw);
-                Card first = new Card(2, Suit.Club);
-                Card second = new Card(14, Suit.Spade);
-                Card third = new Card(12, Suit.Heart);
-                Card fourth = new Card(14, Suit.Heart);
-                Card fifth = new Card(12, Suit.Diamond);
+            Console.SetOut(sw);
 
-                List<Card> list = new List<Card> { first, second, third, fourth, fifth };
-                list.Sort();
-                list.ForEach(Console.WriteLine);
-                string comparison = "Club 2\nDiamond Q\nHeart Q\nHeart A\nSpade A\n";
-                Assert.Equal(comparison, sw.ToString().Replace("\r\n", "\n"));
-            }
+            Hand hand = new Hand();
+            hand.Add(new Card(2, Suit.Diamond));
+            hand.Add(new Card(14, Suit.Spade));
+            hand.Add(new Card(12, Suit.Heart));
+            hand.Add(new Card(2, Suit.Spade));
+
+            hand.Print();
+            
+            Assert.Equal(@"Diamond 2
+Spade A
+Heart Q
+Spade 2
+", sw.ToString());
         }
 
         [Fact]
-        [Points("1")]
-        public void Example3ShouldWork()
+        [Points("1.4")]
+        public void HandSort()
         {
-            using (StringWriter sw = new StringWriter())
+            using StringWriter sw = new StringWriter()
             {
-                // Save a reference to the standard output.
-                TextWriter stdout = Console.Out;
+                NewLine = "\r\n"
+            };
 
-                // Redirect standard output to variable.
-                Console.SetOut(sw);
-                Hand hand = new Hand();
+            Console.SetOut(sw);
 
-                hand.Add(new Card(2, Suit.Diamond));
-                hand.Add(new Card(14, Suit.Spade));
-                hand.Add(new Card(12, Suit.Heart));
-                hand.Add(new Card(2, Suit.Spade));
+            Hand hand = new Hand();
+            hand.Add(new Card(2, Suit.Diamond));
+            hand.Add(new Card(14, Suit.Spade));
+            hand.Add(new Card(12, Suit.Heart));
+            hand.Add(new Card(2, Suit.Spade));
 
-                hand.Print();
-                string comparison = "Diamond 2\nSpade A\nHeart Q\nSpade 2\n";
-                Assert.Equal(comparison, sw.ToString().Replace("\r\n", "\n"));
-            }
-        }
+            hand.Sort();
+            hand.Print();
 
-        [Fact]
-        [Points("1")]
-        public void Example4ShouldWork()
-        {
-            using (StringWriter sw = new StringWriter())
-            {
-                // Save a reference to the standard output.
-                TextWriter stdout = Console.Out;
-
-                // Redirect standard output to variable.
-                Console.SetOut(sw);
-                Hand hand = new Hand();
-
-                hand.Add(new Card(2, Suit.Diamond));
-                hand.Add(new Card(14, Suit.Spade));
-                hand.Add(new Card(12, Suit.Heart));
-                hand.Add(new Card(2, Suit.Spade));
-
-                hand.Sort();
-                hand.Print();
-                string comparison = "Diamond 2\nSpade 2\nHeart Q\nSpade A\n";
-                Assert.Equal(comparison, sw.ToString().Replace("\r\n", "\n"));
-            }
+            Assert.Equal(@"Diamond 2
+Spade 2
+Heart Q
+Spade A
+", sw.ToString());
         }
 
 
         [Fact]
-        [Points("1")]
-        public void Example5ShouldWork()
+        [Points("1.5")]
+        public void HandCompare()
         {
-            using (StringWriter sw = new StringWriter())
+            using StringWriter sw = new StringWriter()
             {
-                // Save a reference to the standard output.
-                TextWriter stdout = Console.Out;
+                NewLine = "\r\n"
+            };
 
-                // Redirect standard output to variable.
-                Console.SetOut(sw);
-                Hand hand1 = new Hand();
+            Console.SetOut(sw);
 
-                hand1.Add(new Card(2, Suit.Diamond));
-                hand1.Add(new Card(14, Suit.Spade));
-                hand1.Add(new Card(12, Suit.Heart));
-                hand1.Add(new Card(2, Suit.Spade));
+            Hand hand1 = new Hand();
 
-                Hand hand2 = new Hand();
+            hand1.Add(new Card(2, Suit.Diamond));
+            hand1.Add(new Card(14, Suit.Spade));
+            hand1.Add(new Card(12, Suit.Heart));
+            hand1.Add(new Card(2, Suit.Spade));
 
-                hand2.Add(new Card(11, Suit.Diamond));
-                hand2.Add(new Card(11, Suit.Spade));
-                hand2.Add(new Card(11, Suit.Heart));
+            Hand hand2 = new Hand();
 
-                int comparison = hand1.CompareTo(hand2);
+            hand2.Add(new Card(11, Suit.Diamond));
+            hand2.Add(new Card(11, Suit.Spade));
+            hand2.Add(new Card(11, Suit.Heart));
 
-                if (comparison < 0)
-                {
-                    Console.WriteLine("better hand is");
-                    hand2.Print();
-                }
-                else if (comparison > 0)
-                {
-                    Console.WriteLine("better hand is");
-                    hand1.Print();
-                }
-                else
-                {
-                    Console.WriteLine("hands are equal");
-                }
+            int comparison = hand1.CompareTo(hand2);
 
-                string compare = "better hand is\nDiamond J\nSpade J\nHeart J\n";
-                Assert.Equal(compare, sw.ToString().Replace("\r\n", "\n"));
+            if (comparison < 0)
+            {
+                Console.WriteLine("better hand is");
+                hand2.Print();
             }
+            else if (comparison > 0)
+            {
+                Console.WriteLine("better hand is");
+                hand1.Print();
+            }
+            else
+            {
+                Console.WriteLine("hands are equal");
+            }
+
+            Assert.Equal(@"better hand is
+Diamond J
+Spade J
+Heart J
+", sw.ToString());
         }
     }
 }
