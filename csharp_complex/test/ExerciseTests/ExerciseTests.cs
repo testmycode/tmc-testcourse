@@ -7,7 +7,7 @@ using TestMyCode.CSharp.API.Attributes;
 
 namespace ExerciseTest
 {
-    public class Tests
+    public partial class Tests
     {
         [Fact]
         [Points("1.1")]
