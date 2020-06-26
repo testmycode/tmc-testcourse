@@ -15,7 +15,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="CodeExerciseLibrary.SourceGenerator" Version="1.0.0" />
+    <PackageReference Include="CodeExerciseLibrary.SourceGenerator" Version="1.1.3" />
     <PackageReference Include="coverlet.collector" Version="1.3.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1"/>
     <PackageReference Include="TestMyCode.CSharp.API" Version="1.0.0" />
