@@ -49,7 +49,7 @@ namespace ExerciseTest
         {
             using StringWriter sw = new StringWriter()
             {
-                NewLine = "\r\n"
+                NewLine = "\n"
             };
 
             Console.SetOut(sw);
@@ -75,7 +75,7 @@ Spade 2
         {
             using StringWriter sw = new StringWriter()
             {
-                NewLine = "\r\n"
+                NewLine = "\n"
             };
 
             Console.SetOut(sw);
@@ -103,7 +103,7 @@ Spade A
         {
             using StringWriter sw = new StringWriter()
             {
-                NewLine = "\r\n"
+                NewLine = "\n"
             };
 
             Console.SetOut(sw);
